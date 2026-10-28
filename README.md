@@ -13,7 +13,7 @@ The repository does not hold the converted documentation. The ADS documentation 
 
 ## Requirements
 
-Python 3.11.5 or later. The converters need no install: their packages are pure-Python copies in `flare2md/_vendor/`. The check tools (`verify.py`, `images_csv.py`) also need `markdown-it-py`:
+Python 3.10 or later. The converters need no install: their packages are pure-Python copies in `flare2md/_vendor/`. The check tools (`verify.py`, `images_csv.py`) also need `markdown-it-py`:
 
 ```sh
 python3 -m pip install markdown-it-py==4.2.0

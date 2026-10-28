@@ -11,7 +11,7 @@ The tool was built for the Keysight ADS 2025 help (`doc/ads`), which is Confluen
 
 ## Install
 
-Python 3.11.5 or later. There is no install step. The scripts load their packages from `_vendor/`: pure-Python copies of fixed PyPI releases. `_vendor/vendor.txt` lists the versions, and `_vendor/LICENSES/` holds their licences. The versions are fixed because the output depends on the rules of `markdownify`. The scripts use the `_vendor/` copies also when other versions are installed. `_vendor/typing_extensions.py` is not a copy: it takes the five names that `bs4` needs from the `typing` module of Python 3.11.
+Python 3.10 or later. There is no install step. The scripts load their packages from `_vendor/`: pure-Python copies of fixed PyPI releases. `_vendor/vendor.txt` lists the versions, and `_vendor/LICENSES/` holds their licences. The versions are fixed because the output depends on the rules of `markdownify`. The scripts use the `_vendor/` copies also when other versions are installed. `_vendor/typing_extensions.py` is not a copy: it takes the five names that `bs4` needs from the `typing` module. On Python 3.10, which has no `typing.Self`, `Self` is `Any` (bs4 uses it only in type hints).
 
 The YAML header is written without a YAML package. The writer follows the rules of PyYAML's `safe_dump` (which strings get quotes, and which quotes), and a test against PyYAML on 188,000 one-line strings found no difference. One exception: a string with a line break gets double quotes.
 
@@ -23,7 +23,7 @@ python3 -m pip install markdown-it-py==4.2.0
 
 Without it, the unit tests of these two tools are skipped.
 
-The output was checked to be byte-identical on Python 3.11 and 3.13 on macOS. An earlier version (with lxml) was also byte-identical on Python 3.12 on Windows 11.
+The output was checked to be byte-identical on Python 3.10, 3.11 and 3.13 on macOS. An earlier version (with lxml) was also byte-identical on Python 3.12 on Windows 11.
 
 ## Run
 

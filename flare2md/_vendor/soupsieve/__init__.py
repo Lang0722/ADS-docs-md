@@ -30,17 +30,17 @@ from .__meta__ import __version__, __version_info__  # noqa: F401
 from . import css_parser as cp
 from . import css_match as cm
 from . import css_types as ct
-from .util import DEBUG, NOCACHE, NOSTRICT, SelectorSyntaxError  # noqa: F401
+from .util import DEBUG, SelectorSyntaxError  # noqa: F401
 import bs4
-from typing import Any, Mapping, Iterator, Iterable, cast
+from typing import Any, Iterator, Iterable
 
 __all__ = (
-    'DEBUG', 'NOCACHE', 'NOSTRICT', 'SelectorSyntaxError', 'CustomSelectors', 'SoupSieve',
-    'closest', 'compile', 'filter', 'iselect', 'match', 'select', 'select_one'
+    'DEBUG', 'SelectorSyntaxError', 'SoupSieve',
+    'closest', 'compile', 'filter', 'iselect',
+    'match', 'select', 'select_one'
 )
 
 SoupSieve = cm.SoupSieve
-CustomSelectors = ct.CustomSelectors
 
 
 def compile(  # noqa: A001
@@ -48,9 +48,7 @@ def compile(  # noqa: A001
     namespaces: dict[str, str] | None = None,
     flags: int = 0,
     *,
-    custom: Mapping[str, str | ct.SelectorList] | None = None,
-    ignore: Iterable[str] | None = None,
-    max_selectors: int = cp.SELECTOR_LIMIT,
+    custom: dict[str, str] | None = None,
     **kwargs: Any
 ) -> cm.SoupSieve:
     """Compile CSS pattern."""
@@ -67,12 +65,8 @@ def compile(  # noqa: A001
     return cp._cached_css_compile(
         pattern,
         ct.Namespaces(namespaces) if namespaces is not None else namespaces,
-        ct.CustomSelectors(
-            cast('dict[str, str | ct.SelectorList]', custom), max_selectors=max_selectors
-        ) if custom is not None and not isinstance(custom, ct.CustomSelectors) else custom,
-        tuple(i.lower() for i in ignore) if ignore is not None else ignore,
-        flags,
-        max_selectors
+        ct.CustomSelectors(custom) if custom is not None else custom,
+        flags
     )
 
 
@@ -88,22 +82,12 @@ def closest(
     namespaces: dict[str, str] | None = None,
     flags: int = 0,
     *,
-    custom: Mapping[str, str | ct.SelectorList] | None = None,
-    ignore: Iterable[str] | None = None,
-    max_selectors: int = cp.SELECTOR_LIMIT,
+    custom: dict[str, str] | None = None,
     **kwargs: Any
 ) -> bs4.Tag | None:
     """Match closest ancestor."""
 
-    return compile(
-        select,
-        namespaces,
-        flags,
-        custom=custom,
-        ignore=ignore,
-        max_selectors=max_selectors,
-        **kwargs
-    ).closest(tag)
+    return compile(select, namespaces, flags, **kwargs).closest(tag)
 
 
 def match(
@@ -112,22 +96,12 @@ def match(
     namespaces: dict[str, str] | None = None,
     flags: int = 0,
     *,
-    custom: Mapping[str, str | ct.SelectorList] | None = None,
-    ignore: Iterable[str] | None = None,
-    max_selectors: int = cp.SELECTOR_LIMIT,
+    custom: dict[str, str] | None = None,
     **kwargs: Any
 ) -> bool:
     """Match node."""
 
-    return compile(
-        select,
-        namespaces,
-        flags,
-        custom=custom,
-        ignore=ignore,
-        max_selectors=max_selectors,
-        **kwargs
-    ).match(tag)
+    return compile(select, namespaces, flags, **kwargs).match(tag)
 
 
 def filter(  # noqa: A001
@@ -136,22 +110,12 @@ def filter(  # noqa: A001
     namespaces: dict[str, str] | None = None,
     flags: int = 0,
     *,
-    custom: Mapping[str, str | ct.SelectorList] | None = None,
-    ignore: Iterable[str] | None = None,
-    max_selectors: int = cp.SELECTOR_LIMIT,
+    custom: dict[str, str] | None = None,
     **kwargs: Any
 ) -> list[bs4.Tag]:
     """Filter list of nodes."""
 
-    return compile(
-        select,
-        namespaces,
-        flags,
-        custom=custom,
-        ignore=ignore,
-        max_selectors=max_selectors,
-        **kwargs
-    ).filter(iterable)
+    return compile(select, namespaces, flags, **kwargs).filter(iterable)
 
 
 def select_one(
@@ -160,22 +124,12 @@ def select_one(
     namespaces: dict[str, str] | None = None,
     flags: int = 0,
     *,
-    custom: Mapping[str, str | ct.SelectorList] | None = None,
-    ignore: Iterable[str] | None = None,
-    max_selectors: int = cp.SELECTOR_LIMIT,
+    custom: dict[str, str] | None = None,
     **kwargs: Any
 ) -> bs4.Tag | None:
     """Select a single tag."""
 
-    return compile(
-        select,
-        namespaces,
-        flags,
-        custom=custom,
-        ignore=ignore,
-        max_selectors=max_selectors,
-        **kwargs
-    ).select_one(tag)
+    return compile(select, namespaces, flags, **kwargs).select_one(tag)
 
 
 def select(
@@ -185,22 +139,12 @@ def select(
     limit: int = 0,
     flags: int = 0,
     *,
-    custom: Mapping[str, str | ct.SelectorList] | None = None,
-    ignore: Iterable[str] | None = None,
-    max_selectors: int = cp.SELECTOR_LIMIT,
+    custom: dict[str, str] | None = None,
     **kwargs: Any
 ) -> list[bs4.Tag]:
     """Select the specified tags."""
 
-    return compile(
-        select,
-        namespaces,
-        flags,
-        custom=custom,
-        ignore=ignore,
-        max_selectors=max_selectors,
-        **kwargs
-    ).select(tag, limit)
+    return compile(select, namespaces, flags, **kwargs).select(tag, limit)
 
 
 def iselect(
@@ -210,22 +154,12 @@ def iselect(
     limit: int = 0,
     flags: int = 0,
     *,
-    custom: Mapping[str, str | ct.SelectorList] | None = None,
-    ignore: Iterable[str] | None = None,
-    max_selectors: int = cp.SELECTOR_LIMIT,
+    custom: dict[str, str] | None = None,
     **kwargs: Any
 ) -> Iterator[bs4.Tag]:
     """Iterate the specified tags."""
 
-    yield from compile(
-        select,
-        namespaces,
-        flags,
-        custom=custom,
-        ignore=ignore,
-        max_selectors=max_selectors,
-        **kwargs
-    ).iselect(tag, limit)
+    yield from compile(select, namespaces, flags, **kwargs).iselect(tag, limit)
 
 
 def escape(ident: str) -> str:

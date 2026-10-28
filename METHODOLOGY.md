@@ -13,7 +13,7 @@ We converted two document sets into Markdown files for a RAG system:
 
 Each source page gives one Markdown file. Each file starts with a YAML header that tells the title, the source path and the place of the page in the document tree. The converters copy the images next to the Markdown files.
 
-An independent checker compares each Markdown file with its source page. It finds no hard failures in the two sets. Both converters give byte-identical output on macOS (Python 3.11 and 3.13). We also ran an earlier version of `flare2md.py` (with the lxml parser) on Windows 11 (Python 3.12), and its output was byte-identical to the macOS output of that version.
+An independent checker compares each Markdown file with its source page. It finds no hard failures in the two sets. Both converters give byte-identical output on macOS (Python 3.10, 3.11 and 3.13). We also ran an earlier version of `flare2md.py` (with the lxml parser) on Windows 11 (Python 3.12), and its output was byte-identical to the macOS output of that version.
 
 ## 2. Terms
 
@@ -132,7 +132,7 @@ We used seven checks. Each check can find errors that the other checks do not fi
    It also checks the YAML header, the links and the image files. A lost item, a lost image, a bad YAML header or an unbalanced code fence is a hard failure.
 3. **Second Markdown engine.** We also rendered all pages with pandoc and compared the text with markdown-it. This check finds Markdown that two engines read differently.
 4. **Output comparison.** After each change, we compared the new output with the old output. We read each changed page and compared it with the source.
-5. **Repeatability.** We ran the converters in one process (`--jobs 1`), with Python 3.11 and 3.13, and (with the earlier lxml version) on Windows. The output must be byte-identical each time.
+5. **Repeatability.** We ran the converters with Python 3.10, 3.11 and 3.13. The earlier lxml version also ran in one process (`--jobs 1`), with Python 3.9 and on Windows. The output must be byte-identical each time.
 6. **Bug hunts.** We did ten rounds of bug hunts on the Flare converter. In each round we searched for defects. In three rounds, independent review agents also tried to break the converter with small test pages. Then we fixed the defects, added tests and ran all checks again. The work stopped when a check found a new real defect, and the user decided the next step.
 7. **Other Sphinx builds.** The ADS Python builds use one theme. To make `sphinx2md.py` work on other Sphinx documents, we built one test project with Sphinx 9.1 and 4.5, five themes, the `dirhtml` builder and a split index. Then we converted and checked these builds. We also converted six real builds of other projects: the Python 3.11 documentation, Open MPI, PMIx, PRRTE, libtiff and lcov. We built nine more from their source packages: attrs, click, itsdangerous, Jinja, pytest, Sphinx itself, Flask, Werkzeug and requests. We also built them with Sphinx 1.8, 2.4 and 3.5, and as one `singlehtml` page. Review agents also made test builds with common extensions (sphinx-design, sphinx-tabs, MyST, numpydoc, nbsphinx, imgmath), more themes and eight languages.
 
@@ -190,7 +190,7 @@ These items come from the source or from Markdown. They are not converter errors
 ```sh
 cd ~/ADS-docs-md/flare2md
 python3 -m pip install markdown-it-py==4.2.0   # for verify.py only
-python3 -m unittest discover -s tests   # Python 3.11.5 or later
+python3 -m unittest discover -s tests   # Python 3.10 or later
 
 python3 flare2md.py ~/ADS-docs-src/Content/ads2025 ../ads2025 \
     --product "Keysight ADS" --version 2025 --source-prefix doc/ads
