@@ -1,0 +1,8 @@
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+# The converted documentation is copyrighted by Keysight. It stays local.
+/ads2025/
+/ads2025-python/
+/images-*.csv

@@ -1,0 +1,11 @@
+# Pure-Python copies of these PyPI releases. The output depends on these
+# exact versions (markdownify rules). Not changed, except that
+# webencodings/tests.py is removed. The licences are in LICENSES/.
+beautifulsoup4==4.15.0
+soupsieve==3.0.3
+markdownify==1.2.3
+html5lib==1.1
+six==1.17.0
+webencodings==0.5.1
+# typing_extensions.py is not a copy of typing_extensions. It takes the
+# 5 names that bs4 imports from the typing module of Python 3.11.
